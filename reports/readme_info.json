@@ -1,0 +1,127 @@
+{
+  "project_name": "esmfold",
+  "description": "Protein sequence analysis using ESM-2 language models via Model Context Protocol (MCP)",
+  "tools": [
+    {
+      "name": "extract_protein_embeddings",
+      "type": "sync",
+      "description": "Extract ESM-2 protein embeddings for sequences (< 10 min)",
+      "example_prompt": "Use extract_protein_embeddings with input_file @examples/data/few_proteins.fasta"
+    },
+    {
+      "name": "submit_protein_embeddings",
+      "type": "submit",
+      "description": "Submit protein embeddings extraction for background processing (> 10 min)",
+      "example_prompt": "Submit protein embeddings extraction for @examples/data/P62593.fasta with model esm2_t48_15B_UR50D"
+    },
+    {
+      "name": "submit_batch_protein_embeddings",
+      "type": "submit",
+      "description": "Submit batch processing for multiple FASTA files",
+      "example_prompt": "Submit batch processing for files [@examples/data/few_proteins.fasta, @examples/data/some_proteins.fasta] and save to results/batch/"
+    },
+    {
+      "name": "get_server_info",
+      "type": "sync",
+      "description": "Get server information and available models",
+      "example_prompt": "Use get_server_info to get server information"
+    },
+    {
+      "name": "get_job_status",
+      "type": "job_management",
+      "description": "Check job progress and current status",
+      "example_prompt": "Use get_job_status with job_id \"abc123\""
+    },
+    {
+      "name": "get_job_result",
+      "type": "job_management",
+      "description": "Get completed job results",
+      "example_prompt": "Use get_job_result with job_id \"abc123\""
+    },
+    {
+      "name": "get_job_log",
+      "type": "job_management",
+      "description": "View job execution logs",
+      "example_prompt": "Use get_job_log with job_id \"abc123\" and tail 100"
+    },
+    {
+      "name": "cancel_job",
+      "type": "job_management",
+      "description": "Cancel running job",
+      "example_prompt": "Use cancel_job with job_id \"abc123\""
+    },
+    {
+      "name": "list_jobs",
+      "type": "job_management",
+      "description": "List all jobs with optional status filter",
+      "example_prompt": "Use list_jobs to see all jobs"
+    }
+  ],
+  "scripts": [
+    {
+      "name": "protein_embeddings.py",
+      "description": "Extract ESM-2 protein sequence embeddings",
+      "example_command": "python scripts/protein_embeddings.py --input examples/data/few_proteins.fasta --output results/embeddings/"
+    }
+  ],
+  "demo_data": [
+    {
+      "file": "few_proteins.fasta",
+      "description": "3 short protein sequences for testing",
+      "used_by": ["extract_protein_embeddings", "protein_embeddings.py"]
+    },
+    {
+      "file": "some_proteins.fasta",
+      "description": "~20 protein sequences for batch testing",
+      "used_by": ["submit_batch_protein_embeddings", "protein_embeddings.py"]
+    },
+    {
+      "file": "P62593.fasta",
+      "description": "Large protein sequence collection",
+      "used_by": ["submit_protein_embeddings", "protein_embeddings.py"]
+    },
+    {
+      "file": "5YH2_mutated_seqs.fasta",
+      "description": "Variant sequences for mutation studies",
+      "used_by": ["extract_protein_embeddings", "protein_embeddings.py"]
+    },
+    {
+      "file": "5YH2.pdb",
+      "description": "Reference protein structure",
+      "used_by": ["structure analysis"]
+    },
+    {
+      "file": "4uv3.pdb",
+      "description": "Multi-chain protein complex",
+      "used_by": ["complex analysis"]
+    }
+  ],
+  "configs": [
+    {
+      "file": "protein_embeddings_config.json",
+      "description": "ESM-2 embeddings configuration with presets",
+      "parameters": {
+        "model": "ESM-2 model selection (6 variants)",
+        "extraction": "Layer and representation options",
+        "computation": "Device and batch size settings",
+        "output": "Format and metadata options",
+        "presets": "Pre-configured option sets (fast, standard, detailed, research)"
+      }
+    }
+  ],
+  "available_models": [
+    "esm2_t6_8M_UR50D",
+    "esm2_t12_35M_UR50D",
+    "esm2_t30_150M_UR50D",
+    "esm2_t33_650M_UR50D",
+    "esm2_t36_3B_UR50D",
+    "esm2_t48_15B_UR50D"
+  ],
+  "environments": {
+    "main_mcp": "./env",
+    "esm_processing": "./env_esmfold"
+  },
+  "installation_verified": true,
+  "examples_tested": true,
+  "paths_validated": true
+}

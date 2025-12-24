@@ -1,0 +1,42 @@
+{
+  "test_date": "2025-12-21T09:51:56.332691",
+  "server_name": "esmfold",
+  "server_path": "/home/xux/Desktop/ProteinMCP/ProteinMCP/tool-mcps/esmfold_mcp/src/server.py",
+  "tests": {
+    "Server Startup": {
+      "status": "passed",
+      "details": true
+    },
+    "Claude MCP Connection": {
+      "status": "passed",
+      "details": true
+    },
+    "Tool Discovery": {
+      "status": "passed",
+      "details": true
+    },
+    "Scripts Exist": {
+      "status": "passed",
+      "details": true
+    },
+    "Example Data Exists": {
+      "status": "passed",
+      "details": true
+    },
+    "Environment Setup": {
+      "status": "passed",
+      "details": true
+    },
+    "Job Directory Setup": {
+      "status": "passed",
+      "details": true
+    }
+  },
+  "issues": [],
+  "summary": {
+    "total_tests": 7,
+    "passed": 7,
+    "failed": 0,
+    "pass_rate": "100.0%"
+  }
+}

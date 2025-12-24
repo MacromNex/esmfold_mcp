@@ -1,0 +1,85 @@
+{
+  "_description": "Configuration for protein embeddings extraction using ESM-2",
+  "_source": "Extracted from examples/use_case_3_protein_embeddings.py",
+
+  "model": {
+    "name": "esm2_t33_650M_UR50D",
+    "description": "ESM-2 650M parameter model (balance of performance and speed)",
+    "alternatives": [
+      "esm2_t6_8M_UR50D",
+      "esm2_t12_35M_UR50D",
+      "esm2_t30_150M_UR50D",
+      "esm2_t33_650M_UR50D",
+      "esm2_t36_3B_UR50D",
+      "esm2_t48_15B_UR50D"
+    ]
+  },
+
+  "extraction": {
+    "repr_layers": [33],
+    "include_mean": true,
+    "include_per_tok": false,
+    "include_bos": false,
+    "include_contacts": false,
+    "description": "Extract mean sequence representation from final layer by default"
+  },
+
+  "computation": {
+    "device": "auto",
+    "batch_size": 1,
+    "description": "Use GPU if available, process one sequence at a time for simplicity"
+  },
+
+  "output": {
+    "format": "npz",
+    "save_metadata": true,
+    "create_subdirs": true,
+    "description": "Save as compressed numpy arrays with metadata"
+  },
+
+  "presets": {
+    "fast": {
+      "model_name": "esm2_t6_8M_UR50D",
+      "repr_layers": [6],
+      "include_mean": true,
+      "include_per_tok": false,
+      "description": "Fast embeddings with smaller model"
+    },
+    "standard": {
+      "model_name": "esm2_t33_650M_UR50D",
+      "repr_layers": [33],
+      "include_mean": true,
+      "include_per_tok": false,
+      "description": "Standard high-quality embeddings"
+    },
+    "detailed": {
+      "model_name": "esm2_t33_650M_UR50D",
+      "repr_layers": [20, 33],
+      "include_mean": true,
+      "include_per_tok": true,
+      "include_contacts": true,
+      "description": "Detailed analysis with per-residue embeddings and contacts"
+    },
+    "research": {
+      "model_name": "esm2_t36_3B_UR50D",
+      "repr_layers": [24, 30, 36],
+      "include_mean": true,
+      "include_per_tok": true,
+      "include_bos": true,
+      "include_contacts": true,
+      "description": "Research-grade embeddings with large model and multiple layers"
+    }
+  },
+
+  "mcp_defaults": {
+    "model_name": "esm2_t33_650M_UR50D",
+    "repr_layers": [33],
+    "include_mean": true,
+    "include_per_tok": false,
+    "include_bos": false,
+    "include_contacts": false,
+    "device": "auto",
+    "output_format": "npz",
+    "description": "Optimized defaults for MCP tool usage"
+  }
+}

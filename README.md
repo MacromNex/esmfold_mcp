@@ -14,6 +14,7 @@ This MCP server provides access to Meta's ESM-2 protein language models for extr
 - [Available Tools](#available-tools)
 - [Examples](#examples)
 - [Troubleshooting](#troubleshooting)
+- [Docker](#docker)
 
 ## Overview
 
@@ -30,10 +31,15 @@ The ESMfold MCP server provides protein sequence analysis capabilities through M
 ```
 ./
 ├── README.md               # This file
+├── Dockerfile              # Docker image definition
+├── requirements.txt        # Python dependencies
+├── quick_setup.sh          # Automated setup script
+├── .github/workflows/      # CI/CD (Docker build & push)
 ├── env/                    # Main MCP environment (Python 3.10)
 ├── env_esmfold/            # ESM processing environment (Python 3.7)
 ├── src/
-│   └── server.py           # MCP server
+│   ├── server.py           # MCP server
+│   └── jobs/               # Job manager for async operations
 ├── scripts/
 │   ├── protein_embeddings.py  # ESM-2 embeddings extraction
 │   └── lib/                # Shared utilities
@@ -48,7 +54,44 @@ The ESMfold MCP server provides protein sequence analysis capabilities through M
 
 ## Installation
 
-### Quick Setup (Recommended)
+### Option 1: Docker (Recommended)
+
+The easiest way to get started. A pre-built image is published to GHCR on every push to `main`.
+
+```bash
+# Pull the latest image
+docker pull ghcr.io/macromnex/esmfold_mcp:latest
+
+# Run the MCP server
+docker run --gpus all ghcr.io/macromnex/esmfold_mcp:latest
+
+# Or build locally
+docker build -t esmfold_mcp .
+docker run --gpus all esmfold_mcp
+```
+
+Register in Claude Code:
+```bash
+claude mcp add esmfold -- docker run --gpus all -i --rm ghcr.io/macromnex/esmfold_mcp:latest
+```
+
+To mount local data directories for input/output:
+```bash
+docker run --gpus all -i --rm \
+  -v /path/to/your/fasta/files:/app/inputs \
+  -v /path/to/save/results:/app/results \
+  ghcr.io/macromnex/esmfold_mcp:latest
+```
+
+Register in Claude Code with mounted volumes:
+```bash
+claude mcp add esmfold -- docker run --gpus all -i --rm \
+  -v /path/to/your/data:/app/inputs \
+  -v /path/to/save/results:/app/results \
+  ghcr.io/macromnex/esmfold_mcp:latest
+```
+
+### Option 2: Quick Setup (Conda)
 
 Run the automated setup script:
 
@@ -65,7 +108,7 @@ The script will create both the main MCP environment and the ESMFold environment
 - NVIDIA GPU with CUDA support (optional, CPU fallback available)
 - At least 8GB RAM (16GB+ recommended for larger models)
 
-### Manual Installation (Alternative)
+### Option 3: Manual Installation
 
 If you prefer manual installation or need to customize the setup, follow the information in `reports/step3_environment.md`:
 
@@ -542,6 +585,36 @@ python -m pytest tests/ -v
 # Run MCP server in dev mode
 fastmcp dev src/server.py
 ```
+
+---
+
+## Docker
+
+### Image Details
+
+The Docker image is based on `pytorch/pytorch:2.4.0-cuda11.8-cudnn9-runtime` and includes:
+- Python 3.11 with PyTorch 2.4.0 + CUDA 11.8
+- ESM (from github.com/facebookresearch/esm)
+- fastmcp 3.0
+- All required dependencies
+
+### Building Locally
+
+```bash
+docker build -t esmfold_mcp .
+```
+
+### CI/CD
+
+A GitHub Actions workflow (`.github/workflows/docker.yml`) automatically builds and pushes the image to GHCR on:
+- Every push to `main`
+- Semantic version tags (`v*.*.*`)
+- Manual workflow dispatch
+
+Image tags:
+- `latest` — latest build from `main`
+- `sha-<commit>` — pinned to a specific commit
+- `x.y.z` — semantic version (when tagged)
 
 ---
 
